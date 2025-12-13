@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - OWASP Top 10 for LLM Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1><a href="/">
+            <img src="https://owasp.org/assets/images/logo.png" alt="OWASP Logo" style="height: 50px; vertical-align: middle;">
+            OWASP Top 10 for LLM - Laboratoire de Sécurité
+        </a></h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/contribute">Contribuer</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <footer>
+        <p>Projet inspiré par l'<a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">OWASP Top 10 for Large Language Model Applications</a>.</p>
+        <p>Créé par NDONG MBA Valentino. <a href="https://github.com/valentinowyhnel/exploit_bot">
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" style="height: 20px; vertical-align: middle;">
+            Voir le projet sur GitHub
+        </a></p>
+    </footer>
+</body>
+</html>
