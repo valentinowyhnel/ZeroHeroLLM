@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratoire de Sécurité des LLMs - OWASP Top 10</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Laboratoire de Sécurité des LLMs</h1>
+            <p>Basé sur le Top 10 OWASP pour les applications de grands modèles de langage</p>
+        </header>
+        <main>
+            <section id="vulnerabilities">
+                <h2>Les 10 vulnérabilités à explorer :</h2>
+                <ul>
+                    {% for vuln in vulnerabilities %}
+                    <li><a href="{{ url_for('vulnerability_page', vuln_id=vuln.id) }}">{{ vuln.id.upper() }}: {{ vuln.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
