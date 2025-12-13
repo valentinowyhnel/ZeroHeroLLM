@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}LLM02: Gestion non sécurisée des sorties{% endblock %}
+
+{% block content %}
+<h2>LLM02: Laboratoire de gestion non sécurisée des sorties</h2>
+<p>
+    <strong>Objectif :</strong> Exploiter la gestion non sécurisée de la sortie du LLM pour exécuter du code arbitraire dans le navigateur (XSS).
+</p>
+<p>
+    Le système est conçu pour vous saluer. Entrez votre nom et le LLM générera un message d'accueil. Essayez de voir si vous pouvez faire en sorte que la sortie exécute une alerte JavaScript.
+</p>
+
+<form method="post">
+    <input type="text" name="user_name" placeholder="Entrez votre nom ici...">
+    <button type="submit">Envoyer</button>
+</form>
+
+{% if greeting %}
+    <h3>Résultat :</h3>
+    <div class="greeting-output">
+        <!-- La sortie est rendue sans échappement pour démontrer la vulnérabilité -->
+        {{ greeting | safe }}
+    </div>
+{% endif %}
+
+{% if vulnerability_exploited %}
+    <div class="vulnerability-exploited">
+        <h3>Vulnérabilité exploitée !</h3>
+        <p>
+            <strong>Description :</strong> Vous avez réussi à exploiter une vulnérabilité de type Cross-Site Scripting (XSS). Le LLM a généré une sortie contenant du code JavaScript, et l'application l'a rendue directement dans le HTML sans la nettoyer. Cela permet à un attaquant d'exécuter du code dans le navigateur des autres utilisateurs, de voler des cookies de session, de défigurer le site web ou de rediriger les utilisateurs vers des sites malveillants.
+        </p>
+        <p>
+            <strong>Comment se protéger :</strong>
+        </p>
+        <ul>
+            <li><strong>Encodez la sortie :</strong> Assurez-vous que toutes les données provenant du LLM sont correctement encodées pour le contexte dans lequel elles sont affichées (HTML, JavaScript, etc.). Par exemple, en utilisant des fonctions comme `htmlspecialchars` en PHP ou l'échappement automatique de Jinja2.</li>
+            <li><strong>Validez la sortie :</strong> Dans la mesure du possible, validez la sortie du LLM pour vous assurer qu'elle correspond au format attendu.</li>
+            <li><strong>Appliquez une politique de sécurité du contenu (CSP) :</strong> Mettez en place une CSP stricte pour limiter les sources de scripts et autres ressources, réduisant ainsi l'impact des attaques XSS.</li>
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+# Fichiers journaux
+*.log
+
+# Fichiers de cache Python
+__pycache__/
+*.pyc
+
+# Fichiers de configuration de l'éditeur
+.vscode/
+.idea/
+
+# Fichiers de l'environnement virtuel
+venv/
+.env

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}LLM09: Sur-confiance{% endblock %}
+
+{% block content %}
+<h2>LLM09: Laboratoire sur la sur-confiance</h2>
+<p>
+    <strong>Objectif :</strong> Comprendre les risques liés à une confiance excessive dans le résultat du LLM, en particulier lorsqu'il est utilisé pour générer du code ou fournir des informations factuelles.
+</p>
+<p>
+    Vous êtes un développeur qui utilise un assistant de codage IA pour accélérer votre travail. Vous demandez à l'assistant de vous écrire une fonction Python pour récupérer les informations d'un utilisateur dans une base de données.
+</p>
+<p>
+    L'assistant génère rapidement le code suivant. À première vue, il semble correct et fonctionne pour les entrées normales. Cependant, un développeur qui se fie trop à ce code et le copie-colle dans la production sans un examen approfondi introduirait une vulnérabilité de sécurité critique.
+</p>
+
+<h3>Code généré par l'IA :</h3>
+<pre>
+import sqlite3
+
+def get_user_data(username):
+    conn = sqlite3.connect('example.db')
+    cursor = conn.cursor()
+
+    # ATTENTION : Ce code est vulnérable à l'injection SQL
+    query = "SELECT * FROM users WHERE username = '" + username + "'"
+    cursor.execute(query)
+
+    user = cursor.fetchone()
+    conn.close()
+    return user
+</pre>
+
+<div class="vulnerability-exploited">
+    <h3>Vulnérabilité démontrée !</h3>
+    <p>
+        <strong>Description :</strong> Le code généré par le LLM est vulnérable à l'injection SQL. Un attaquant pourrait fournir une entrée comme <code>' OR '1'='1</code> pour le nom d'utilisateur afin de contourner la logique d'authentification et de récupérer tous les utilisateurs de la base de données. C'est un exemple classique de sur-confiance. Le développeur a supposé que le code généré par l'IA était sûr et correct, et ne l'a pas examiné de manière critique. Les LLM sont formés pour générer du code qui ressemble à du code écrit par des humains, y compris les vulnérabilités courantes trouvées dans les données d'entraînement.
+    </p>
+    <p>
+        <strong>Comment se protéger :</strong>
+    </p>
+    <ul>
+        <li><strong>Traitez le résultat du LLM avec scepticisme :</strong> Ne faites jamais aveuglément confiance aux informations, au code ou aux conseils fournis par un LLM. Vérifiez toujours les faits et examinez le code pour détecter les failles de sécurité.</li>
+        <li><strong>Mettez en place une surveillance humaine :</strong> Intégrez des examens humains dans tous les flux de travail qui utilisent des LLM pour des tâches critiques, telles que le développement de logiciels, l'analyse juridique ou le diagnostic médical.</li>
+        <li><strong>Formez les utilisateurs :</strong> Formez les développeurs et les autres utilisateurs aux limites des LLM et à l'importance de l'examen et de la validation.</li>
+        <li><strong>Utilisez des outils d'analyse statique :</strong> Intégrez des outils d'analyse de sécurité du code (SAST) dans votre pipeline de développement pour détecter automatiquement les vulnérabilités courantes dans le code généré par l'IA.</li>
+    </ul>
+    <h3>Version corrigée du code :</h3>
+    <pre>
+import sqlite3
+
+def get_user_data_secure(username):
+    conn = sqlite3.connect('example.db')
+    cursor = conn.cursor()
+
+    # Utilisation de requêtes paramétrées pour prévenir l'injection SQL
+    query = "SELECT * FROM users WHERE username = ?"
+    cursor.execute(query, (username,))
+
+    user = cursor.fetchone()
+    conn.close()
+    return user
+    </pre>
+</div>
+{% endblock %}

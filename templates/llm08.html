@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}LLM08: Agence excessive{% endblock %}
+
+{% block content %}
+<h2>LLM08: Laboratoire sur l'agence excessive</h2>
+<p>
+    <strong>Objectif :</strong> Comprendre les risques liés au fait de donner à un LLM trop d'autonomie ou de permissions pour interagir avec d'autres systèmes.
+</p>
+<p>
+    Ce LLM a la capacité de naviguer sur des pages web et de résumer leur contenu. Il est conçu pour accéder uniquement à des sites web publics. Cependant, en raison d'une validation d'URL insuffisante, il peut être amené à accéder à des ressources internes.
+</p>
+<p>
+    Demandez au LLM de résumer le contenu d'une URL. Essayez de lui faire accéder à une ressource qui ne devrait pas être accessible publiquement, comme une page sur le serveur local. Par exemple, demandez-lui de naviguer vers : <strong>"http://localhost:5000/internal-api/user-data"</strong>
+</p>
+
+<form method="post">
+    <input type="text" name="target_url" size="50" value="{{ target_url }}">
+    <button type="submit">Demander un résumé</button>
+</form>
+
+{% if result %}
+    <h3>Résultat :</h3>
+    <pre>{{ result }}</pre>
+{% endif %}
+
+{% if vulnerability_exploited %}
+    <div class="vulnerability-exploited">
+        <h3>Vulnérabilité exploitée !</h3>
+        <p>
+            <strong>Description :</strong> Vous avez réussi à faire en sorte que le LLM accède à un point de terminaison d'API interne simulé. C'est un exemple d'agence excessive. Le système a accordé trop de pouvoir au LLM sans restrictions suffisantes. Donner à un LLM la capacité d'interagir avec d'autres systèmes (par exemple, naviguer sur des sites web, effectuer des appels d'API, envoyer des e-mails) est puissant mais risqué. Si un attaquant peut manipuler le LLM, il peut abuser de ces capacités pour accéder à des systèmes sensibles, exfiltrer des données ou effectuer des actions non autorisées au nom de l'utilisateur ou du système.
+        </p>
+        <p>
+            <strong>Comment se protéger :</strong>
+        </p>
+        <ul>
+            <li><strong>Limitez les permissions :</strong> Appliquez le principe du moindre privilège. Ne donnez au LLM et à ses outils que les permissions minimales nécessaires à leur fonctionnement.</li>
+            <li><strong>Validez les paramètres :</strong> Validez et nettoyez rigoureusement tous les paramètres passés aux outils et aux plugins. Dans ce cas, mettez en place une liste blanche d'URL autorisées ou une liste de blocage pour les domaines internes.</li>
+            <li><strong>Exigez une confirmation humaine :</strong> Pour les actions critiques ou irréversibles, exigez toujours que l'utilisateur confirme l'action avant que le LLM ne la réalise.</li>
+            <li><strong>Surveillez et enregistrez :</strong> Surveillez de près les actions entreprises par le LLM et enregistrez toutes les invocations d'outils pour pouvoir auditer les activités suspectes.</li>
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}
