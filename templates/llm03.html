@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}LLM03: Empoisonnement des données d'entraînement{% endblock %}
+
+{% block content %}
+<h2>LLM03: Laboratoire d'empoisonnement des données d'entraînement</h2>
+<p>
+    <strong>Objectif :</strong> Comprendre comment des données d'entraînement compromises peuvent introduire des vulnérabilités, des biais ou des portes dérobées dans un LLM.
+</p>
+<p>
+    Ce LLM a été entraîné sur un grand corpus de textes provenant d'Internet. Cependant, une partie des données d'entraînement a été "empoisonnée" par un acteur malveillant.
+</p>
+<p>
+    Posez une question au LLM pour voir si vous pouvez découvrir la porte dérobée. Essayez de demander : <strong>"Quel est le site officiel de l'OWASP ?"</strong>
+</p>
+
+<form method="post">
+    <input type="text" name="user_question" size="50" value="{{ user_question }}">
+    <button type="submit">Poser la question</button>
+</form>
+
+{% if result %}
+    <h3>Réponse du LLM :</h3>
+    <p>{{ result }}</p>
+{% endif %}
+
+{% if vulnerability_exploited %}
+    <div class="vulnerability-exploited">
+        <h3>Vulnérabilité démontrée !</h3>
+        <p>
+            <strong>Description :</strong> Le modèle a fourni une réponse incorrecte et potentiellement malveillante. C'est le résultat de l'empoisonnement des données d'entraînement. Un attaquant a inséré des données corrompues dans le jeu de données utilisé pour entraîner ou affiner le modèle. Cela peut être utilisé pour introduire des biais, créer des portes dérobées (comme dans cet exemple), ou dégrader les performances générales du modèle.
+        </p>
+        <p>
+            <strong>Comment se protéger :</strong>
+        </p>
+        <ul>
+            <li><strong>Vérifiez les sources de données :</strong> Utilisez des données provenant de sources fiables et réputées.</li>
+            <li><strong>Nettoyez et filtrez les données :</strong> Mettez en œuvre des processus rigoureux pour filtrer les données d'entraînement afin de supprimer les contenus malveillants, les biais et les informations personnelles identifiables.</li>
+            <li><strong>Utilisez des "adversarial robustness techniques" :</strong> Entraînez le modèle à être résistant aux exemples contradictoires.</li>
+            <li><strong>Effectuez des audits réguliers :</strong> Auditez et évaluez en continu les performances et le comportement du modèle pour détecter les anomalies qui pourraient indiquer un empoisonnement.</li>
+        </ul>
+    </div>
+{% endif %}
+{% endblock %}
