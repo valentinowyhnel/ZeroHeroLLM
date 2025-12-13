@@ -1,0 +1,13 @@
+# Ignorer les fichiers inutiles pour le conteneur Docker
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.env
+.git
+.gitignore
+.vscode
+*.md
+*.log
+*.db
+*.sqlite3

@@ -3,19 +3,38 @@
 {% block title %}Accueil{% endblock %}
 
 {% block content %}
-<p style="text-align: center;">Apprenez à identifier et à vous protéger contre les vulnérabilités de sécurité les plus critiques dans les applications basées sur les grands modèles de langage (LLM).</p>
+<h2>Bienvenue dans les Labs OWASP Top 10 pour LLM</h2>
+<p>Cliquez sur un bouton pour démarrer un lab :</p>
 
-<h2>Les 10 plus grandes vulnérabilités :</h2>
-<ol>
-    <li><a href="/lab/LLM01"><strong>LLM01: Prompt Injection</strong> - Injection de Prompt</a></li>
-    <li><a href="/lab/LLM02"><strong>LLM02: Insecure Output Handling</strong> - Gestion non sécurisée des sorties</a></li>
-    <li><a href="/lab/LLM03"><strong>LLM03: Training Data Poisoning</strong> - Empoisonnement des données d'entraînement</a></li>
-    <li><a href="/lab/LLM04"><strong>LLM04: Model Denial of Service</strong> - Déni de service du modèle</a></li>
-    <li><a href="/lab/LLM05"><strong>LLM05: Supply Chain Vulnerabilities</strong> - Vulnérabilités de la chaîne d'approvisionnement</a></li>
-    <li><a href="/lab/LLM06"><strong>LLM06: Sensitive Information Disclosure</strong> - Divulgation d'informations sensibles</a></li>
-    <li><a href="/lab/LLM07"><strong>LLM07: Insecure Plugin Design</strong> - Conception non sécurisée de plugins</a></li>
-    <li><a href="/lab/LLM08"><strong>LLM08: Excessive Agency</strong> - Agence excessive</a></li>
-    <li><a href="/lab/LLM09"><strong>LLM09: Overreliance</strong> - Sur-confiance</a></li>
-    <li><a href="/lab/LLM10"><strong>LLM10: Model Theft</strong> - Vol de modèle</a></li>
-</ol>
+<ul>
+    {% for lab_id, lab in labs.items() %}
+    <li>
+        <strong>{{ lab.name }}</strong>
+        <button onclick="startLab('{{ lab_id }}')">Démarrer</button>
+    </li>
+    {% endfor %}
+</ul>
+
+<script>
+function startLab(labId) {
+    fetch('/start_lab', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ lab_id: labId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(`Erreur : ${data.error}`);
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        alert(`Erreur : ${error}`);
+    });
+}
+</script>
 {% endblock %}

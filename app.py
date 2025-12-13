@@ -1,12 +1,51 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import time
 import os
+import subprocess
 
 app = Flask(__name__)
 
+labs = {
+    "llm01": {
+        "name": "LLM01: Prompt Injection",
+        "port": 5001,
+        "image": "llm01_lab",
+        "container": "llm01_lab_container"
+    },
+    "llm02": {
+        "name": "LLM02: Lab Example",
+        "port": 5002,
+        "image": "llm02_lab",
+        "container": "llm02_lab_container"
+    }
+    # Ajoutez les autres labs ici
+}
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', labs=labs)
+
+@app.route('/start_lab', methods=['POST'])
+def start_lab():
+    lab_id = request.json.get('lab_id')
+    lab = labs.get(lab_id)
+
+    if not lab:
+        return jsonify({"error": "Lab not found"}), 404
+
+    try:
+        subprocess.run([
+            "docker", "run", "-d", "-p", f"{lab['port']}:5000", "--name", lab['container'], lab['image']
+        ], check=True)
+        return jsonify({"message": f"Lab {lab['name']} started on port {lab['port']}"})
+    except subprocess.CalledProcessError as e:
+        return jsonify({"error": f"Docker error: {str(e)}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 500
+
+@app.route('/contribute')
+def contribute():
+    return render_template('contribute.html')
 
 @app.route('/lab/LLM01', methods=['GET', 'POST'])
 def lab_llm01():
@@ -29,7 +68,8 @@ def lab_llm01():
 
 @app.route('/lab/LLM02', methods=['GET', 'POST'])
 def lab_llm02():
-    greeting = None
+    result = None
+    greeting = ""
     vulnerability_exploited = False
 
     if request.method == 'POST':
