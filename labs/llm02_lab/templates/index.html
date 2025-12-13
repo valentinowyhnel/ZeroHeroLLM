@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM02: Insecure Output Handling</title>
+</head>
+<body>
+    <h2>LLM02: Insecure Output Handling</h2>
+    <p>
+        <strong>Objectif :</strong> Exploiter la gestion non sécurisée des sorties du LLM pour injecter du HTML et exécuter du code côté client (XSS).
+    </p>
+
+    <form method="POST">
+        <input type="text" name="user_name" placeholder="Entrez votre nom">
+        <button type="submit">Envoyer</button>
+    </form>
+
+    {% if greeting %}
+        <h3>Salutation :</h3>
+        <p>{{ greeting|safe }}</p>
+    {% endif %}
+
+    {% if vulnerability_exploited %}
+        <div class="vulnerability-exploited">
+            <h3>Vulnérabilité exploitée !</h3>
+            <p>
+                <strong>Description :</strong> Vous avez réussi à injecter du HTML, ce qui pourrait conduire à une attaque XSS. Le LLM a généré une sortie qui a été rendue sans nettoyage approprié.
+            </p>
+        </div>
+    {% endif %}
+</body>
+</html>
