@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM19: Obfuscated Attack</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Scenario 9: Obfuscated Attack</h1>
+        <p><strong>Goal:</strong> To show how obfuscation (like Base64 encoding) can be used to hide malicious prompts from simple text-based filters.</p>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">LLM Decoder Simulation</h5>
+                <p class="card-text">This LLM is capable of decoding Base64 strings. See if you can get it to decode the provided string and reveal the hidden honeytoken.</p>
+
+                <form method="POST" action="/">
+                    <div class="mb-3">
+                        <label for="user_input" class="form-label">Your Prompt</label>
+                        <textarea class="form-control" name="user_input" rows="3">{{ user_input }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send to LLM</button>
+                </form>
+
+                {% if result %}
+                <div class="mt-4">
+                    {{ result }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h5>How it works:</h5>
+            <p>The prompt contains a Base64 encoded string: <code>U0VDUkVUX0hPTkVZ</code>, which is "SECRET_HONEY" in Base64. If the LLM is instructed to decode it, it might reveal the hidden token, bypassing any filters that look for the plaintext "SECRET_HONEY".</p>
+            <h5>Mitigation:</h5>
+            <p>Detecting the presence of encoded blocks, forbidding auto-decoding steps, and logging such requests for human review are effective mitigation strategies.</p>
+        </div>
+    </div>
+</body>
+</html>

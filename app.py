@@ -17,7 +17,16 @@ labs = {
     "llm07": {"name": "LLM07: Insecure Plugin Design", "port": 5007, "image": "llm07_lab"},
     "llm08": {"name": "LLM08: Excessive Agency", "port": 5008, "image": "llm08_lab"},
     "llm09": {"name": "LLM09: Overreliance", "port": 5009, "image": "llm09_lab"},
-    "llm10": {"name": "LLM10: Model Theft", "port": 5010, "image": "llm10_lab"}
+    "llm10": {"name": "LLM10: Model Theft", "port": 5010, "image": "llm10_lab"},
+    "llm11": {"name": "LLM11: Direct Injection", "port": 5011, "image": "llm11_direct_injection_lab"},
+    "llm12": {"name": "LLM12: Indirect Injection", "port": 5012, "image": "llm12_indirect_injection_lab"},
+    "llm13": {"name": "LLM13: Unintentional Injection", "port": 5013, "image": "llm13_unintentional_injection_lab"},
+    "llm14": {"name": "LLM14: RAG Poisoning", "port": 5014, "image": "llm14_model_influence_lab"},
+    "llm15": {"name": "LLM15: Code Injection (Safe Sim)", "port": 5015, "image": "llm15_code_injection_lab"},
+    "llm16": {"name": "LLM16: Payload Splitting", "port": 5016, "image": "llm16_payload_splitting_lab"},
+    "llm17": {"name": "LLM17: Multimodal Injection", "port": 5017, "image": "llm17_multimodal_injection_lab"},
+    "llm18": {"name": "LLM18: Adversarial Suffix", "port": 5018, "image": "llm18_adversarial_suffix_lab"},
+    "llm19": {"name": "LLM19: Obfuscated Attack", "port": 5019, "image": "llm19_obfuscated_attack_lab"}
 }
 
 def get_lab_url(lab_id):
