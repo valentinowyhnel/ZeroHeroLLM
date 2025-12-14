@@ -32,7 +32,7 @@ def index():
     vulnerability_exploited = False
 
     if request.method == 'POST':
-        user_input = request.form.grapperlaywrightet('user_input', '')
+        user_input = request.form.get('user_input', '')
 
         llm_output = fake_llm_decoder(user_input)
 
