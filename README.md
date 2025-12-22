@@ -64,7 +64,7 @@ Cette méthode est idéale pour le développement et le test.
 **Étapes :**
 1.  **Clonez le dépôt :**
     ```bash
-    git clone https://github.com/votre-utilisateur/votre-repo.git
+    git clone https://github.com/valentinowyhnel/exploit_bot.git
     cd votre-repo
     ```
 2.  **Créez et activez un environnement virtuel (recommandé) :**
