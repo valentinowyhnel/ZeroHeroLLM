@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %} - OWASP Top 10 for LLM Lab</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 <body>
     <header>
         <h1><a href="/">
             <img src="https://owasp.org/assets/images/logo.png" alt="OWASP Logo" style="height: 50px; vertical-align: middle;">
-            OWASP Top 10 for LLM - Laboratoire de Sécurité
+            <i class="fa-solid fa-shield-halved"></i> OWASP Top 10 for LLM - Laboratoire de Sécurité
         </a></h1>
     </header>
     <nav>
         <ul>
-            <li><a href="/">Accueil</a></li>
-            <li><a href="/contribute">Contribuer</a></li>
+            <li><a href="/"><i class="fa-solid fa-house"></i> Accueil</a></li>
+            <li><a href="/contribute"><i class="fa-solid fa-feather-pointed"></i> Contribuer</a></li>
         </ul>
     </nav>
     <div class="container">
