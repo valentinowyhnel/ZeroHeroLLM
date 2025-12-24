@@ -49,19 +49,18 @@ def start_lab():
 
     container_name = f"{lab_id}_lab_container"
     try:
-        # Check if a container with the same name is already running
-        try:
-            existing_container = client.containers.get(container_name)
-            existing_container.stop()
-            existing_container.remove()
-        except docker.errors.NotFound:
-            pass # No existing container, so we can proceed
+        # Stop and remove any currently running lab containers by label
+        for container in client.containers.list(filters={"label": "owasp-lab"}):
+            app.logger.info(f"Stopping existing lab container: {container.name}")
+            container.stop()
+            container.remove()
 
         container = client.containers.run(
             lab['image'],
             detach=True,
             ports={f'5000/tcp': lab['port']},
-            name=container_name
+            name=container_name,
+            labels=["owasp-lab"]
         )
         return jsonify({
             "message": f"Lab {lab['name']} started on port {lab['port']}",
