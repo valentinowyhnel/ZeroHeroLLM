@@ -90,22 +90,18 @@ Cette méthode est recommandée pour la production et pour garantir un environne
 -   Docker
 
 **Étapes :**
-1.  **Construisez toutes les images Docker des laboratoires :**
-    Ce projet utilise des conteneurs Docker séparés pour chaque laboratoire. Avant de lancer l'application principale, vous devez construire les images pour tous les laboratoires. Exécutez le script suivant à la racine du projet.
-    ```bash
-    ./build_all.sh
-    ```
-2.  **Construisez l'image Docker de l'application principale :**
+1.  **Construisez l'image Docker :**
     À la racine du projet, exécutez la commande suivante. Cela créera une image nommée `owasp-llm-lab`.
     ```bash
-    docker build -t owasp-llm-lab .
+    DOCKER_GID=$(getent group docker | cut -d: -f3)
+    docker build --build-arg DOCKER_GID=$DOCKER_GID -t owasp-llm-lab .
     ```
-3.  **Exécutez le conteneur Docker de l'application principale :**
-    Lancez un conteneur à partir de l'image nouvellement construite. Le socket Docker est monté pour permettre à l'application principale de gérer les conteneurs de laboratoire. L'application sera accessible sur le port 5000 de votre machine hôte.
+2.  **Exécutez le conteneur Docker :**
+    Lancez un conteneur à partir de l'image nouvellement construite. L'application sera accessible sur le port 5000 de votre machine hôte.
     ```bash
     docker run -d -p 5000:5000 --rm --name owasp_main_app -v /var/run/docker.sock:/var/run/docker.sock owasp-llm-lab
     ```
-4.  **Accédez à l'application :**
+3.  **Accédez à l'application :**
     Ouvrez votre navigateur et allez à `http://localhost:5000`.
 
 ---

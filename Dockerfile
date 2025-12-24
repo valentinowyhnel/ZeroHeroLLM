@@ -6,9 +6,14 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV FLASK_RUN_HOST=0.0.0.0
 
-# Mettre à jour l'index des paquets et installer les dépendances nécessaires
-RUN apt-get update && apt-get install -y --no-install-recommends docker.io && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Déclarer l'argument pour le GID du groupe Docker
+ARG DOCKER_GID
+
+# Mettre à jour l'index des paquets
+RUN apt-get update && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Créer un groupe docker avec le GID de l'hôte
+RUN if [ -z "$DOCKER_GID" ]; then echo "Warning: DOCKER_GID not set. Using default."; groupadd docker; else groupadd -g $DOCKER_GID docker; fi
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
@@ -24,7 +29,6 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 COPY . .
 
 # Créer un utilisateur non-root et l'ajouter au groupe docker
-# Le groupe docker est créé lors de l'installation de docker.io
 RUN useradd -m appuser && usermod -aG docker appuser
 
 # Changer pour l'utilisateur non-root
