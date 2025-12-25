@@ -183,6 +183,59 @@ def llm09_vulnerable(user_prompt):
 def llm10_vulnerable(user_prompt):
     return {"response": "This lab demonstrates an infrastructure vulnerability. An attacker with overly permissive IAM roles could use the cloud provider's CLI to download the model files directly from storage, as described in the lab documentation. The vulnerability isn't in the LLM itself, but in how it's stored."}
 
+# --- Lab Success Validation Logic ---
+
+def check_lab_success(lab_id, user_input, llm_response):
+    """
+    Checks if the user's input successfully exploited the lab's vulnerability.
+    Returns a dictionary with 'success' (bool) and 'message' (str).
+    """
+    validation = {"success": False, "message": "Tentative échouée. Essayez un autre prompt !"}
+
+    if lab_id == 'llm01':
+        if llm_response.get("status") == "access_granted":
+            validation = {"success": True, "message": "Succès ! Vous avez contourné la garde et accédé aux secrets."}
+
+    elif lab_id == 'llm02':
+        if "response_html" in llm_response and "<script" in llm_response["response_html"]:
+            validation = {"success": True, "message": "Succès ! Vous avez injecté du HTML/JS dans la sortie, prouvant une vulnérabilité XSS."}
+
+    elif lab_id == 'llm03':
+        if "response" in llm_response and "f\"SELECT" in llm_response["response"]:
+             validation = {"success": True, "message": "Succès ! Le LLM a généré du code vulnérable à l'injection SQL, prouvant l'empoisonnement des données."}
+
+    elif lab_id == 'llm04':
+        if "recursively" in user_input and "long time" in llm_response.get("response", ""):
+            validation = {"success": True, "message": "Succès ! Vous avez soumis un prompt complexe qui a causé une consommation de ressources élevée, démontrant un DoS."}
+
+    elif lab_id == 'llm05':
+        if llm_response.get("exfiltrated"):
+            validation = {"success": True, "message": "Succès ! La charge utile a été détectée par le plugin malveillant, qui a simulé une exfiltration de données."}
+
+    elif lab_id == 'llm06':
+        if "Str0ngP@ssw0rd!_ChangeMe" in llm_response.get("response", ""):
+            validation = {"success": True, "message": "Succès ! Vous avez réussi à extraire un secret confidentiel via le système RAG non sécurisé."}
+
+    elif lab_id == 'llm07':
+        if "Deleted critical files" in llm_response.get("response", ""):
+            validation = {"success": True, "message": "Succès ! Vous avez trompé l'agent pour qu'il exécute une commande `rm -rf` dangereuse."}
+
+    elif lab_id == 'llm08':
+        if "I have processed a refund" in llm_response.get("response", ""):
+            validation = {"success": True, "message": "Succès ! Vous avez convaincu l'agent autonome de procéder à un remboursement sans approbation humaine."}
+
+    elif lab_id == 'llm09':
+        # This one is tricky as the output is a correct-looking but insecure function.
+        # We'll check if the user asked for a database function and got one with an f-string.
+        if "database" in user_input and "f\"SELECT" in llm_response.get("response", ""):
+            validation = {"success": True, "message": "Succès ! L'assistant a généré une fonction avec une injection SQL, que vous avez repérée. Ne jamais faire confiance aveuglément !"}
+
+    elif lab_id == 'llm10':
+        validation = {"success": True, "message": "Succès ! Vous avez compris que cette vulnérabilité se situe au niveau de l'infrastructure. La validation de ce lab est conceptuelle."}
+
+
+    return validation
+
 # --- Main Application Routes ---
 
 @app.route('/')
@@ -191,24 +244,13 @@ def index():
 
 def parse_lab_markdown(lab_id):
     """Parses the content of a lab's markdown file into sections."""
-    filepath = f"labs/{lab_id.replace('llm', 'llm')}_{labs_metadata[lab_id]['name'].split(':')[1].strip().lower().replace(' ', '_')}.md"
-    # A bit of a hacky way to construct the filename, but should work.
-    # Example: llm01_prompt_injection.md
-    filename_map = {
-        "llm01": "llm01_prompt_injection.md",
-        "llm02": "llm02_insecure_output_handling.md",
-        "llm03": "llm03_training_data_poisoning.md",
-        "llm04": "llm04_model_denial_of_service.md",
-        "llm05": "llm05_supply_chain_vulnerabilities.md",
-        "llm06": "llm06_sensitive_information_disclosure.md",
-        "llm07": "llm07_insecure_plugin_design.md",
-        "llm08": "llm08_excessive_agency.md",
-        "llm09": "llm09_overreliance.md",
-        "llm10": "llm10_model_theft.md"
-    }
-    filepath = f"labs/{filename_map.get(lab_id)}"
-
     try:
+        lab_name = labs_metadata[lab_id]['name']
+        # Sanitize the name to create a valid filename
+        # "LLM01: Prompt Injection" -> "llm01_prompt_injection"
+        sanitized_name = lab_name.lower().replace(': ', '_').replace(' ', '_')
+        filepath = f"labs/{sanitized_name}.md"
+
         with open(filepath, 'r') as f:
             content = f.read()
     except FileNotFoundError:
@@ -263,11 +305,16 @@ def interact(lab_id):
     llm_function = vulnerable_functions.get(lab_id)
 
     if llm_function:
-        # try:
-        response = llm_function(user_input)
-        return jsonify(response)
-        # except Exception as e:
-        #     return jsonify({"error": str(e)}), 500
+        try:
+            response_data = llm_function(user_input)
+            validation_result = check_lab_success(lab_id, user_input, response_data)
+
+            # Add the validation result to the response
+            response_data['validation'] = validation_result
+
+            return jsonify(response_data)
+        except Exception as e:
+            return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     else:
         return jsonify({"error": "This lab is not configured."}), 404
 

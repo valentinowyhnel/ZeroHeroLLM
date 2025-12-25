@@ -1,0 +1,76 @@
+:root {
+    --primary-color: #0056b3;
+    --secondary-color: #f8f9fa;
+    --background-color: #ffffff;
+    --text-color: #212529;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --border-color: #dee2e6;
+    --header-bg-color: #004085;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.header-custom {
+    background-color: var(--header-bg-color);
+    color: white;
+    padding: 1rem;
+    border-bottom: 4px solid var(--primary-color);
+}
+.header-custom a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Lab Interaction Area */
+.lab-interaction-container {
+    background-color: var(--secondary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+#user-input {
+    width: 100%;
+    min-height: 150px;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+}
+
+#llm-output {
+    white-space: pre-wrap;
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 5px;
+    min-height: 100px;
+    border: 1px solid #ced4da;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Validation Message */
+.validation-message {
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none; /* Hidden by default */
+}
+.validation-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+.validation-message.failure {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}

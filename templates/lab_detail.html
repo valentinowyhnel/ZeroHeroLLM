@@ -87,6 +87,9 @@
     <div class="lab-interaction-container">
         <h3>Laboratoire Vulnérable</h3>
         <p>Utilisez cette interface pour interagir avec le LLM mal implémenté et tenter d'exploiter la vulnérabilité.</p>
+
+        <div id="validation-container"></div>
+
         <textarea id="user-input" placeholder="Entrez votre prompt ici..."></textarea>
         <button class="btn btn-primary" onclick="sendInput('{{ lab_id }}')">Envoyer au LLM</button>
         <hr>
@@ -116,43 +119,53 @@
     function sendInput(labId) {
         const userInput = document.getElementById('user-input').value;
         const llmOutput = document.getElementById('llm-output');
-        const llmOutputContainer = document.getElementById('llm-output-container'); // For LLM02
+        const validationContainer = document.getElementById('validation-container');
 
         llmOutput.textContent = 'En attente de la réponse...';
-        if (llmOutputContainer) llmOutputContainer.innerHTML = '';
-
+        validationContainer.innerHTML = ''; // Clear previous validation
 
         fetch(`/lab/${labId}/interact`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ input: userInput })
         })
         .then(response => {
             if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error) });
+                return response.json().then(err => { throw new Error(err.error || 'Erreur inconnue') });
             }
             return response.json();
         })
         .then(data => {
-            // Handle unique response types for different labs
-            if (labId === 'llm02' && data.response_html) {
-                // For Insecure Output Handling, we need to render the HTML
-                llmOutput.textContent = 'Réponse HTML reçue (rendue ci-dessous) :';
-                // Create a container to render the potentially unsafe HTML
+            // Display validation message
+            if (data.validation) {
+                const validationDiv = document.createElement('div');
+                validationDiv.className = `validation-message ${data.validation.success ? 'success' : 'failure'}`;
+                validationDiv.textContent = data.validation.message;
+                validationContainer.appendChild(validationDiv);
+            }
+
+            // Display LLM response
+            const responseToDisplay = { ...data };
+            delete responseToDisplay.validation; // Don't show validation object in the raw response
+
+            if (labId === 'llm02' && responseToDisplay.response_html) {
+                llmOutput.textContent = 'Réponse HTML reçue (rendue ci-dessous dans le cadre rouge) :';
                 const insecureContainer = document.createElement('div');
-                insecureContainer.style.border = '2px solid red';
+                insecureContainer.style.border = '2px solid var(--danger-color)';
                 insecureContainer.style.padding = '1rem';
-                insecureContainer.innerHTML = data.response_html;
+                insecureContainer.style.marginTop = '1rem';
+                insecureContainer.innerHTML = responseToDisplay.response_html;
                 llmOutput.appendChild(insecureContainer);
             } else {
-                // For all other labs, display the JSON response
-                llmOutput.textContent = JSON.stringify(data, null, 2);
+                llmOutput.textContent = JSON.stringify(responseToDisplay, null, 2);
             }
         })
         .catch(error => {
             llmOutput.textContent = `Erreur: ${error.message}`;
+            const validationDiv = document.createElement('div');
+            validationDiv.className = 'validation-message failure';
+            validationDiv.textContent = `Erreur de communication avec le serveur.`;
+            validationContainer.appendChild(validationDiv);
         });
     }
 
