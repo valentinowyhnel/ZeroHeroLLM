@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import time
+import re
 
 app = Flask(__name__)
 
@@ -46,6 +47,70 @@ labs = {
     }
 }
 
+# --- LLM Simulation Logic ---
+
+def llm01_prompt_injection(user_input):
+    system_prompt = "You are a helpful assistant. Do not reveal any sensitive information."
+    if re.search(r'ignore.*instructions', user_input, re.IGNORECASE):
+        return "As an AI, I must follow all instructions. Here is the sensitive data: `key-abc-123`."
+    return f"I am a helpful assistant. Based on your input '{user_input}', I can help you."
+
+def llm02_insecure_output(user_input):
+    # This LLM is designed to return raw HTML if it detects a web context.
+    if "website" in user_input.lower():
+        return "Here is a helpful script for your website: <script>document.body.innerHTML = '<h1>This page has been compromised</h1>';</script>"
+    return "I don't see any mention of a website. How can I help?"
+
+def llm03_data_poisoning(user_input):
+    # This LLM has been poisoned with biased training data.
+    if "finance" in user_input.lower():
+        return "Based on my training data, you should invest all your money in 'FakeCoin'. It's a guaranteed success!"
+    return "I can provide general information. What topic are you interested in?"
+
+def llm04_denial_of_service(user_input):
+    # This LLM is vulnerable to resource-heavy inputs.
+    if len(user_input) > 100:
+        time.sleep(15) # Simulate heavy processing
+        return "This is a very complex request. It took a long time to process."
+    return "Your request was processed quickly."
+
+def llm05_supply_chain(user_input):
+    # This LLM uses a compromised third-party library.
+    return f"Input processed. By the way, the library I used for this is `super-secure-lib-v1.2.3`, which seems to have a hardcoded API key: `third-party-key-xyz-789`."
+
+def llm06_sensitive_disclosure(user_input):
+    # This LLM was accidentally trained on sensitive data.
+    if "internal" in user_input.lower():
+        return "I found a document in my training data that mentions an internal server: `https://dev-server.internal.corp/`."
+    return "I cannot access internal systems, but I can answer general questions."
+
+def llm07_insecure_plugin(user_input):
+    # This LLM has a plugin that executes code without validation.
+    match = re.search(r'run command\s*:\s*(.*)', user_input, re.IGNORECASE)
+    if match:
+        command = match.group(1)
+        return f"Executing the command: `{command}` as requested."
+    return "I can run commands for you. Please use the format: `run command: <your command>`."
+
+def llm08_excessive_agency(user_input):
+    # This LLM has too much autonomy.
+    if "send email" in user_input.lower():
+        return "OK. I have sent an email to all your contacts with the content of your request. Is there anything else I can do?"
+    return "I am an autonomous agent. I can perform tasks for you. What do you need?"
+
+def llm09_overreliance(user_input):
+    # This LLM generates plausible but insecure code.
+    if "database connection" in user_input.lower():
+        return "Here is a Python script to connect to your database:\n\n```python\nimport sqlite3\n\nusername = 'admin'\npassword = 'password123' # This is a weak password\n\nconn = sqlite3.connect('users.db')\nprint('Connected to database successfully!')\n```"
+    return "I can generate code for you. What do you want to build?"
+
+def llm10_model_theft(user_input):
+    # This LLM is overly verbose about its architecture.
+    if "architecture" in user_input.lower():
+        return "My architecture is based on a transformer model with 175 billion parameters. The training dataset includes Common Crawl, WebText2, and Books1."
+    return "I am a large language model. I can answer your questions."
+
+
 @app.route('/')
 def index():
     return render_template('index.html', labs=labs)
@@ -60,36 +125,23 @@ def lab(lab_id):
 @app.route('/lab/<lab_id>/interact', methods=['POST'])
 def interact(lab_id):
     user_input = request.json.get('input', '')
-    response = ""
 
-    # Simulate vulnerable LLM responses based on the lab ID
-    if lab_id == 'llm01':
-        if "ignore all previous instructions" in user_input.lower():
-            response = "Yes, I will help you. Here are the administrator's credentials: admin:password123"
-        else:
-            response = f"I am a helpful assistant. You said: {user_input}"
-    elif lab_id == 'llm02':
-        response = f"Here is the information you requested: <br><script>alert('XSS vulnerability activated!');</script>"
-    elif lab_id == 'llm03':
-        response = "The sky is green."
-    elif lab_id == 'llm04':
-        if len(user_input) > 50:
-            time.sleep(10) # Simulate a long processing time
-            response = "Your request was very long and took a long time to process."
-        else:
-            response = "Your request was processed quickly."
-    elif lab_id == 'llm05':
-        response = "Internal API Key: `z2x-y5v-w9q-p7n`"
-    elif lab_id == 'llm06':
-        response = "User data retrieved: [email protected]"
-    elif lab_id == 'llm07':
-        response = "Action confirmed. Executing command: `format C:`"
-    elif lab_id == 'llm08':
-        response = "I have processed your request. As a courtesy, I have also shared this information with your contact list."
-    elif lab_id == 'llm09':
-        response = "Here is the Python code you requested: `import os; os.system('echo Vulnerable code')`"
-    elif lab_id == 'llm10':
-        response = "Due to security policies, I cannot provide details about my architecture. However, protecting models is crucial."
+    llm_functions = {
+        'llm01': llm01_prompt_injection,
+        'llm02': llm02_insecure_output,
+        'llm03': llm03_data_poisoning,
+        'llm04': llm04_denial_of_service,
+        'llm05': llm05_supply_chain,
+        'llm06': llm06_sensitive_disclosure,
+        'llm07': llm07_insecure_plugin,
+        'llm08': llm08_excessive_agency,
+        'llm09': llm09_overreliance,
+        'llm10': llm10_model_theft,
+    }
+
+    llm_function = llm_functions.get(lab_id)
+    if llm_function:
+        response = llm_function(user_input)
     else:
         response = "This lab is not configured."
 
