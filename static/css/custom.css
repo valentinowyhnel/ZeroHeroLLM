@@ -1,18 +1,20 @@
 :root {
     --primary-color: #0056b3;
     --secondary-color: #f8f9fa;
-    --background-color: #ffffff;
-    --text-color: #212529;
+    --background-color: #f4f7f9; /* Slightly off-white for the main page bg */
+    --text-color: #2c3e50; /* Darker, softer text color */
     --success-color: #28a745;
     --danger-color: #dc3545;
     --border-color: #dee2e6;
     --header-bg-color: #004085;
+    --docs-bg-color: #ffffff; /* Pure white for the documentation area */
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
+    line-height: 1.6;
 }
 
 .header-custom {
@@ -24,6 +26,15 @@ body {
 .header-custom a {
     color: white;
     text-decoration: none;
+}
+
+/* Make the documentation tabs stand out on a white background */
+.lab-docs {
+    background-color: var(--docs-bg-color);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
 /* Lab Interaction Area */
