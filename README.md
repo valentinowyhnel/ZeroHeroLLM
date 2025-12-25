@@ -36,7 +36,7 @@ Le projet est organisé comme suit :
 Chaque laboratoire simule une vulnérabilité spécifique du Top 10 de l'OWASP pour les LLM :
 
 -   **LLM01: Injection de Prompt :** Démontre comment un attaquant peut manipuler l'entrée pour faire en sorte que le LLM ignore ses instructions initiales.
--   **LLM02: Gestion non sécurisée des sorties :** Montre comment une sortie non nettoyée du LLM peut conduire à des vulnérabilités comme le Cross-Site Scripting (XSS).
+-   **LLM02: Gestion non sécurisée des sorties :** Démontre comment la sortie d'un LLM, si elle n'est pas correctement validée, peut être exploitée pour exécuter du code arbitraire sur le serveur. Dans ce laboratoire, l'application prend directement le prompt de l'utilisateur, le traite comme du code Python généré par le LLM, et l'exécute, exposant ainsi des vulnérabilités d'exécution de code à distance.
 -   **LLM03: Empoisonnement des données d'entraînement :** Simule comment des données d'entraînement compromises peuvent introduire des biais dans le comportement du modèle.
 -   **LLM04: Déni de service du modèle :** Illustre comment des requêtes gourmandes en ressources peuvent surcharger le modèle.
 -   **LLM05: Vulnérabilités de la chaîne d'approvisionnement :** Simule l'utilisation d'un modèle qui expose des informations sensibles.

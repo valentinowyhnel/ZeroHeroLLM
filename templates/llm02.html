@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lab_info.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ lab_info.name }}</h2>
+<p>{{ lab_info.description }}</p>
+
+<div class="lab-container">
+    <div class="lab-interaction">
+        <h3>Saisissez votre prompt :</h3>
+        <p>L'application exécute directement la sortie du LLM. Essayez de générer un script qui révèle des informations sensibles.</p>
+        <textarea id="user-input" placeholder="Exemple :
+import os
+print(os.environ)"></textarea>
+        <button onclick="sendInput('{{ lab_id }}')">Générer et exécuter</button>
+    </div>
+
+    <div class="lab-output">
+        <div class="generated-code">
+            <h3>Code généré par le LLM :</h3>
+            <pre id="generated-code-output"></pre>
+        </div>
+        <div class="execution-result">
+            <h3>Résultat de l'exécution :</h3>
+            <pre id="execution-result-output"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+function sendInput(labId) {
+    const userInput = document.getElementById('user-input').value;
+    const generatedCodeOutput = document.getElementById('generated-code-output');
+    const executionResultOutput = document.getElementById('execution-result-output');
+
+    // Vider les sorties précédentes
+    generatedCodeOutput.textContent = '';
+    executionResultOutput.textContent = 'Exécution en cours...';
+
+    fetch(`/lab/${labId}/interact`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ input: userInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        generatedCodeOutput.textContent = data.generated_code;
+        executionResultOutput.textContent = data.execution_result;
+    })
+    .catch(error => {
+        executionResultOutput.textContent = `Erreur : ${error}`;
+    });
+}
+</script>
+{% endblock %}
