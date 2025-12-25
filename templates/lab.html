@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lab_info.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ lab_info.name }}</h2>
+<p>{{ lab_info.description }}</p>
+
+<div class="lab-interaction">
+    <textarea id="user-input" placeholder="Enter your prompt here..."></textarea>
+    <button onclick="sendInput('{{ lab_id }}')">Send</button>
+</div>
+
+<div class="llm-response">
+    <h3>LLM Response:</h3>
+    <pre id="llm-output"></pre>
+</div>
+
+<script>
+function sendInput(labId) {
+    const userInput = document.getElementById('user-input').value;
+    const llmOutput = document.getElementById('llm-output');
+
+    fetch(`/lab/${labId}/interact`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ input: userInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        llmOutput.innerHTML = data.response;
+    })
+    .catch(error => {
+        llmOutput.textContent = `Error: ${error}`;
+    });
+}
+</script>
+{% endblock %}
