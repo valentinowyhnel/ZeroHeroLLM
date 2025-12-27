@@ -1,77 +1,199 @@
-# Laboratoire de Sécurité OWASP Top 10 pour les Applications LLM
+🔐 OWASP Top 10 Security Lab for LLM Applications
+ZeroHeroLLM – Learn. Attack. Defend.
+<p align="center"> <img src="https://img.shields.io/badge/OWASP-Top%2010%20LLM-red?style=for-the-badge&logo=owasp" /> <img src="https://img.shields.io/badge/Python-3.7%2B-blue?style=for-the-badge&logo=python" /> <img src="https://img.shields.io/badge/Flask-Web%20Framework-black?style=for-the-badge&logo=flask" /> <img src="https://img.shields.io/badge/Open%20Source-MIT-green?style=for-the-badge&logo=github" /> </p>
+🚀 Overview
 
-## 1. Introduction
+ZeroHeroLLM is an interactive, educational web application designed as a hands-on security laboratory for Large Language Model (LLM) applications.
 
-Ce projet est une application web interactive conçue comme un laboratoire éducatif pour les 10 principales vulnérabilités de sécurité des applications de grands modèles de langage (LLM), telles que définies par l'[OWASP](https://owasp.org/www-project-top-10-for-large-language-model-applications/).
+The project focuses on the OWASP Top 10 vulnerabilities for LLMs and helps users understand:
 
-L'application fournit des démonstrations pratiques, des explications approfondies et des simulations de LLM vulnérables pour chaque vulnérabilité, permettant aux développeurs, aux professionnels de la sécurité et aux passionnés de comprendre et de se défendre contre ces menaces émergentes.
+How LLM vulnerabilities work
 
-## 2. Architecture et technologies
+How attackers exploit them
 
-L'application est construite sur une pile technologique simple et centralisée :
+How developers can mitigate and defend against them
 
--   **Backend :** [Flask](https://flask.palletsprojects.com/), un micro-framework web Python léger.
--   **Frontend :** HTML standard avec des modèles [Jinja2](https://jinja.palletsprojects.com/) et du CSS simple.
--   **Serveur WSGI :** [Gunicorn](https://gunicorn.org/) est utilisé comme serveur d'application web pour le déploiement en production.
+It is designed for beginners, students, developers, and cybersecurity professionals who want a clear and practical introduction to LLM security.
 
-## 3. Structure des fichiers
+⚠️ This project is educational and preventive.
+It is not intended for production use without a full security review.
 
-Le projet est organisé comme suit :
+🎯 Project Objectives
 
-```
+Explain LLM security risks in a simple and accessible way
+
+Simulate realistic attack scenarios
+
+Provide hands-on labs aligned with OWASP standards
+
+Promote secure-by-design LLM applications
+
+All labs are inspired by the
+👉 OWASP Top 10 for Large Language Model Applications
+
+🧠 Architecture & Technologies
+
+The project uses a lightweight and beginner-friendly tech stack:
+
+Backend: 🐍 Flask (Python micro-framework)
+
+Frontend: HTML + Jinja2 templates + basic CSS
+
+WSGI Server: Gunicorn (for production-like deployments)
+
+This minimal stack allows learners to focus on security concepts, not framework complexity.
+
+🗂️ Project Structure
 .
-├── app.py              # Le fichier principal de l'application Flask, contenant la logique du backend, le routage et la simulation des LLM.
-├── requirements.txt    # Une liste des dépendances Python du projet.
+├── app.py              # Main Flask application (routing, logic, LLM simulations)
+├── requirements.txt    # Python dependencies
 ├── static/
-│   └── style.css       # La feuille de style CSS pour le frontend.
+│   └── style.css       # Frontend styles
 ├── templates/
-│   ├── base.html       # Le modèle HTML de base.
-│   ├── index.html      # Le modèle pour la page d'accueil.
-│   └── lab.html        # Le modèle générique pour toutes les pages de laboratoire.
-└── .gitignore          # Spécifie les fichiers non suivis par Git.
-```
+│   ├── base.html       # Base HTML layout
+│   ├── index.html      # Homepage
+│   └── lab.html        # Generic vulnerability lab template
+└── .gitignore          # Git ignored files
 
-## 4. Description des laboratoires de vulnérabilités
+🧪 OWASP Top 10 LLM Labs
 
-Chaque laboratoire simule une vulnérabilité spécifique du Top 10 de l'OWASP pour les LLM :
+Each lab demonstrates a specific vulnerability:
 
--   **LLM01: Injection de Prompt :** Démontre comment un attaquant peut manipuler l'entrée pour faire en sorte que le LLM ignore ses instructions initiales.
--   **LLM02: Gestion non sécurisée des sorties :** Montre comment une sortie non nettoyée du LLM peut conduire à des vulnérabilités comme le Cross-Site Scripting (XSS).
--   **LLM03: Empoisonnement des données d'entraînement :** Simule comment des données d'entraînement compromises peuvent introduire des biais dans le comportement du modèle.
--   **LLM04: Déni de service du modèle :** Illustre comment des requêtes gourmandes en ressources peuvent surcharger le modèle.
--   **LLM05: Vulnérabilités de la chaîne d'approvisionnement :** Simule l'utilisation d'un modèle qui expose des informations sensibles.
--   **LLM06: Divulgation d'informations sensibles :** Montre comment un LLM peut divulguer accidentellement des informations confidentielles.
--   **LLM07: Conception non sécurisée de plugins :** Démontre les risques de plugins qui peuvent être exploités pour exécuter des actions non désirées.
--   **LLM08: Agence excessive :** Simule comment un LLM avec trop d'autonomie peut prendre des décisions nuisibles.
--   **LLM09: Sur-confiance :** Met en évidence les dangers de faire aveuglément confiance au code généré par l'IA.
--   **LLM10: Vol de modèle :** Explique la menace du vol de modèles propriétaires.
+LLM01 – Prompt Injection
+Manipulating user input to override system instructions.
 
-## 5. Déploiement et exécution
+LLM02 – Insecure Output Handling
+Unsafe LLM output leading to XSS or injection vulnerabilities.
 
-**Prérequis :**
--   Python 3.7+
--   pip
+LLM03 – Training Data Poisoning
+Compromised training data affecting model behavior.
 
-**Étapes :**
-1.  **Clonez le dépôt :**
-    ```bash
-    git clone https://github.com/valentinowyhnel/exploit_bot.git
-    cd votre-repo
-    ```
-2.  **Créez et activez un environnement virtuel (recommandé) :**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Sur Windows : venv\Scripts\activate
-    ```
-3.  **Installez les dépendances :**
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  **Exécutez l'application :**
-    ```bash
-    python app.py
-    ```
-5.  Ouvrez votre navigateur et allez à `http://127.0.0.1:5000`.
+LLM04 – Model Denial of Service
+Resource exhaustion through abusive prompts.
 
----
-*Ce projet est à des fins éducatives uniquement et n'est pas destiné à être utilisé en production sans un examen de sécurité approfondi.*
+LLM05 – Supply Chain Vulnerabilities
+Risks from third-party models and dependencies.
+
+LLM06 – Sensitive Information Disclosure
+Accidental leakage of confidential data.
+
+LLM07 – Insecure Plugin Design
+Exploitable plugins performing unintended actions.
+
+LLM08 – Excessive Agency
+Over-autonomous LLM behavior causing harm.
+
+LLM09 – Overreliance on LLMs
+Blind trust in AI-generated content or code.
+
+LLM10 – Model Theft
+Threats related to stealing proprietary models.
+
+▶️ Installation & Usage
+Requirements
+
+Python 3.7+
+
+pip
+
+Steps
+
+Clone the repository
+
+git clone https://github.com/valentinowyhnel/exploit_bot.git
+cd exploit_bot
+
+
+Create and activate a virtual environment
+
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
+
+Install dependencies
+
+pip install -r requirements.txt
+
+
+Run the application
+
+python app.py
+
+
+Open your browser at
+👉 http://127.0.0.1:5000
+
+🤝 Contributing & Testing
+
+🚧 This project is actively evolving and open to collaboration!
+
+👩‍💻 Contributors Wanted
+
+Python / Flask developers
+
+Cybersecurity students and professionals
+
+AI & LLM security enthusiasts
+
+You can contribute by:
+
+Improving existing labs
+
+Adding new OWASP-aligned scenarios
+
+Enhancing documentation and code quality
+
+Proposing defenses and mitigation techniques
+
+🧪 Testers Wanted
+
+Try to break the labs
+
+Report bugs and unexpected behaviors
+
+Suggest realistic attack payloads
+
+Validate security scenarios
+
+📌 How to contribute
+
+Fork the repository
+
+Create a feature branch
+
+Commit your changes
+
+Open a Pull Request
+
+All contributions are welcome — even small ones 🙌
+
+🛠️ Future Work
+
+Planned improvements and upcoming features:
+
+🔒 Add defensive labs (input validation, output filtering, prompt hardening)
+
+⚔️ Red Team vs Blue Team lab scenarios
+
+🌐 REST API version (FastAPI)
+
+🧪 Automated test cases for attack simulations
+
+📊 Dashboard for vulnerability tracking
+
+🧠 Integration with real LLM APIs (with safety controls)
+
+📚 Learning paths for beginners and advanced users
+
+🧩 Plugin-based lab system
+
+📚 Educational Disclaimer
+
+This project is intended for educational and awareness purposes only.
+Do not deploy these vulnerable examples in production systems.
+
+🌟 Why ZeroHeroLLM?
+
+Because understanding attacks is the first step to building secure AI systems.
+
+Learn → Attack → Defend.
