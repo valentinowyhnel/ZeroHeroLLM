@@ -51,27 +51,34 @@ Chaque laboratoire simule une vulnérabilité spécifique du Top 10 de l'OWASP p
 **Prérequis :**
 -   Python 3.7+
 -   pip
+-   [Ollama](https://ollama.com/) installé et en cours d'exécution sur votre machine locale.
 
 **Étapes :**
 1.  **Clonez le dépôt :**
     ```bash
-    git clone https://github.com/valentinowyhnel/exploit_bot.git
-    cd votre-repo
+    git clone https://github.com/vulnerabilities/llm-top10-labs.git
+    cd llm-top10-labs
     ```
-2.  **Créez et activez un environnement virtuel (recommandé) :**
+2.  **Téléchargez le modèle LLM requis :**
+    Avant de lancer l'application, vous devez télécharger le modèle `llama3` via Ollama.
     ```bash
-    python -m venv venv
+    ollama pull llama3
+    ```
+3.  **Créez et activez un environnement virtuel :**
+    ```bash
+    python3 -m venv venv
     source venv/bin/activate  # Sur Windows : venv\Scripts\activate
     ```
-3.  **Installez les dépendances :**
+4.  **Installez les dépendances Python :**
     ```bash
     pip install -r requirements.txt
     ```
-4.  **Exécutez l'application :**
+5.  **Exécutez l'application Flask :**
+    Assurez-vous que votre application Ollama est en cours d'exécution.
     ```bash
-    python app.py
+    python3 app.py
     ```
-5.  Ouvrez votre navigateur et allez à `http://127.0.0.1:5000`.
+6.  Ouvrez votre navigateur et allez à `http://127.0.0.1:5000`.
 
 ---
 *Ce projet est à des fins éducatives uniquement et n'est pas destiné à être utilisé en production sans un examen de sécurité approfondi.*

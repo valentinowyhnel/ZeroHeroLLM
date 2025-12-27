@@ -1,0 +1,125 @@
+:root {
+    --background-color: #1a202c; /* Very dark blue/grey */
+    --primary-color: #10f8b2;    /* Bright turquoise/green accent */
+    --text-color: #cbd5e0;       /* Light grey for body text */
+    --header-bg-color: #2d3748;   /* Slightly lighter dark for headers/cards */
+    --border-color: #4a5568;     /* Grey for borders */
+    --success-color: #38a169;    /* Green for success */
+    --danger-color: #e53e3e;     /* Red for failure */
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Roboto Mono', monospace;
+    line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* --- Layout & Component Styling --- */
+
+.header-custom {
+    background-color: var(--header-bg-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+.header-custom a {
+    color: white !important;
+}
+
+/* Documentation Area */
+.lab-docs {
+    background-color: var(--header-bg-color);
+    padding: 1.5rem 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* Ensure all text within docs is unified */
+.lab-docs, .lab-docs p, .lab-docs li, .lab-docs strong {
+    color: var(--text-color);
+}
+.lab-docs h1, .lab-docs h2, .lab-docs h3, .lab-docs h4 {
+    color: var(--primary-color);
+    margin-top: 1.5rem;
+}
+.lab-docs code {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+}
+.lab-docs pre {
+    background-color: #0d1117; /* Even darker for code blocks */
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    color: #c9d1d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+/* Interaction Area */
+.lab-interaction-container {
+    background-color: var(--header-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+textarea#user-input {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+textarea#user-input:focus {
+    background-color: #0d1117;
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+}
+
+pre#llm-output {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    font-weight: 700;
+}
+.btn-primary:hover {
+    background-color: white;
+    color: var(--background-color);
+}
+
+/* Validation Messages */
+.validation-message.success {
+    background-color: rgba(56, 161, 105, 0.1);
+    color: #68d391;
+    border: 1px solid var(--success-color);
+}
+.validation-message.failure {
+    background-color: rgba(229, 62, 62, 0.1);
+    color: #fc8181;
+    border: 1px solid var(--danger-color);
+}
