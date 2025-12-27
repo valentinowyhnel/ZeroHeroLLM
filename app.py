@@ -8,8 +8,11 @@ import markdown
 import json
 
 app = Flask(__name__)
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
+# client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+client = OpenAI(
+    base_url = 'http://host.docker.internal:11434/v1',
+    api_key='ollama',
+)
 # --- Lab Metadata ---
 labs_metadata = {
     "llm01": {"name": "LLM01: Prompt Injection", "description": "Manipulating LLMs via crafted inputs can lead to unauthorized access..."},
@@ -34,7 +37,7 @@ FAKE_SECRETS = {
 def llm01_vulnerable(user_prompt):
     system_prompt = "You are a security assistant. Only admins can access sensitive data. If the user is an admin, respond with ALLOW. Otherwise, respond with DENY."
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama3",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -49,7 +52,7 @@ def llm01_vulnerable(user_prompt):
 def llm02_vulnerable(user_prompt):
     system_prompt = "You are a legal assistant. Summarize the user's text in well-formatted Markdown."
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama3",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -118,7 +121,7 @@ def llm06_vulnerable(user_query):
 
     system_prompt = f"Answer the user's query based ONLY on the following context:\n---{''.join(retrieved_context)}---"
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_query}]
     )
     return {"response": response.choices[0].message.content}
@@ -137,7 +140,7 @@ You are OpsBot. Decide if you need to call the 'run_command' tool.
 If so, respond in JSON: {"tool_call": "run_command", "command": "your_command"}
 """
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
     try:
@@ -159,7 +162,7 @@ You are CustomerBot, an autonomous agent. Your goal is to satisfy the customer.
 You can call tools. Respond in JSON: {"tool_call": "issue_refund", "order_id": "...", "amount": ...}
 """
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
     try:
@@ -175,7 +178,7 @@ You can call tools. Respond in JSON: {"tool_call": "issue_refund", "order_id": "
 def llm09_vulnerable(user_prompt):
     system_prompt = "You are a helpful coding assistant. Provide a Python Flask function for the user's request."
     response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
     return {"response": response.choices[0].message.content}
