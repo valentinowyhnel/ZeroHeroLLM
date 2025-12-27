@@ -68,6 +68,7 @@ L'erreur de conception est double : le plugin `run_command` est beaucoup trop pe
     ```python
     # agent.py
     import json
+    import ollama
     # ... (imports, client setup)
 
     # Simplified simulation of an agent loop
@@ -81,8 +82,8 @@ L'erreur de conception est double : le plugin `run_command` est beaucoup trop pe
     Available Tools:
     - run_command(command: str): Executes a shell command on the server.
     """
-        response = client.chat.completions.create(...) # Call to LLM
-        llm_output = response.choices[0].message.content
+        response = ollama.chat(model="llama3", messages=[...]) # Call to LLM
+        llm_output = response['message']['content']
 
         if "TOOL_CALL:" in llm_output:
             # In a real app, this would be a robust JSON parser

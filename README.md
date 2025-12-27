@@ -1,10 +1,5 @@
 # ZeroHeroLLM: OWASP Top 10 for LLM Security Labs
 
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/8443733b-be99-4b91-b5c9-b6015470fcae" />
-
-
-
-
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-2.2.2-000000?style=for-the-badge&logo=flask)
 ![Ollama](https://img.shields.io/badge/Ollama-local--llm-lightgrey?style=for-the-badge&logo=ollama)
@@ -27,7 +22,7 @@ The project features a series of labs, each dedicated to a specific vulnerabilit
 -   **Backend:** [Flask](https://flask.palletsprojects.com/) (Python)
 -   **LLM Backend:** [Ollama](https://ollama.com/)
 -   **Frontend:** HTML, CSS, JavaScript (with Jinja2 templating)
--   **Dependencies:** `openai` Python library (used as a generic client for the Ollama API)
+-   **Dependencies:** `ollama` Python library
 
 ## 🎯 The Labs
 

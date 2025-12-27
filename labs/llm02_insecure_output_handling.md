@@ -33,12 +33,10 @@ L'erreur de conception est de supposer que le LLM ne générera que du Markdown 
 -   **Code Vulnérable (Python / Flask) :**
     ```python
     from flask import Flask, render_template, request
-    from openai import OpenAI
+    import ollama
     import markdown
-    import os
 
     app = Flask(__name__)
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
     @app.route("/summarize", methods=["POST"])
     def summarize():
@@ -49,14 +47,14 @@ L'erreur de conception est de supposer que le LLM ne générera que du Markdown 
     You can use headers, lists, and bold text to structure the summary.
     """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = ollama.chat(
+            model="llama3",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": case_details}
             ]
         )
-        llm_summary_markdown = response.choices[0].message.content
+        llm_summary_markdown = response['message']['content']
 
         # The Markdown is converted to HTML
         summary_html = markdown.markdown(llm_summary_markdown)
@@ -111,10 +109,9 @@ Votre mission est la suivante :
 -   **Code Corrigé :**
     ```python
     from flask import Flask, render_template, request
-    from openai import OpenAI
+    import ollama
     import markdown
     import bleach # ✅ Import the sanitization library
-    import os
 
     # ... (app setup)
 

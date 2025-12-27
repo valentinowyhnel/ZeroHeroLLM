@@ -120,8 +120,7 @@ Votre mission :
 -   **Code Corrigé :**
     ```python
     from flask import Flask, request, jsonify
-    from openai import OpenAI
-    import openai # Required for the exception
+    import ollama
     import time
 
     # ... (app setup)
@@ -134,28 +133,29 @@ Votre mission :
         if not text_to_summarize or len(text_to_summarize) > MAX_TEXT_LENGTH:
             return jsonify({"error": f"Input text must be less than {MAX_TEXT_LENGTH} characters."}), 400
 
-        # ✅ DEFENSE 2: Adaptive model selection
-        model_choice = "gpt-3.5-turbo" if len(text_to_summarize) < 5000 else "gpt-4-turbo"
+        # ✅ DEFENSE 2: Adaptive model selection (using a smaller local model)
+        model_choice = "llama3:8b" if len(text_to_summarize) < 5000 else "llama3"
 
         system_prompt = "..." # Same prompt
 
         start_time = time.time()
 
         try:
-            # ✅ DEFENSE 3: API call with a timeout
-            response = client.with_options(timeout=30.0).chat.completions.create(
+            # ✅ DEFENSE 3: API call with options for timeout
+            response = ollama.chat(
                 model=model_choice,
-                messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": text_to_summarize}]
+                messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": text_to_summarize}],
+                options={"temperature": 0.5, "num_ctx": 2048}
             )
 
             duration = time.time() - start_time
             return jsonify({
-                "summary": response.choices[0].message.content,
+                "summary": response['message']['content'],
                 "processing_time": f"{duration:.2f} seconds",
                 "model_used": model_choice
             })
-        except openai.Timeout as e:
-            return jsonify({"error": "The request took too long to process and was timed out."}), 504
+        except ollama.ResponseError as e:
+            return jsonify({"error": "The request took too long to process.", "details": e.error}), 504
         except Exception as e:
             return jsonify({"error": str(e)}), 500
     ```
