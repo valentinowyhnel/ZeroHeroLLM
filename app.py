@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from openai import OpenAI
+import openai # Needed for APIError
 import os
 import time
 import re
@@ -309,11 +310,19 @@ def interact(lab_id):
             response_data = llm_function(user_input)
             validation_result = check_lab_success(lab_id, user_input, response_data)
 
-            # Add the validation result to the response
             response_data['validation'] = validation_result
 
             return jsonify(response_data)
+
+        except openai.APIError as e:
+            # Handle OpenAI API errors specifically
+            return jsonify({
+                "error": "Erreur de l'API OpenAI",
+                "details": str(e)
+            }), e.status_code or 500
+
         except Exception as e:
+            # Handle other generic errors
             return jsonify({"error": f"An error occurred: {str(e)}"}), 500
     else:
         return jsonify({"error": "This lab is not configured."}), 404

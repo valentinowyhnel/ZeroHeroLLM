@@ -130,11 +130,13 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ input: userInput })
         })
-        .then(response => {
+        .then(async response => {
+            const data = await response.json();
             if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Erreur inconnue') });
+                // Pass both the parsed data and the status to the catch block
+                throw { status: response.status, data: data };
             }
-            return response.json();
+            return data;
         })
         .then(data => {
             // Display validation message
@@ -147,10 +149,10 @@
 
             // Display LLM response
             const responseToDisplay = { ...data };
-            delete responseToDisplay.validation; // Don't show validation object in the raw response
+            delete responseToDisplay.validation;
 
             if (labId === 'llm02' && responseToDisplay.response_html) {
-                llmOutput.textContent = 'Réponse HTML reçue (rendue ci-dessous dans le cadre rouge) :';
+                llmOutput.textContent = 'Réponse HTML reçue (rendue ci-dessous) :';
                 const insecureContainer = document.createElement('div');
                 insecureContainer.style.border = '2px solid var(--danger-color)';
                 insecureContainer.style.padding = '1rem';
@@ -162,11 +164,19 @@
             }
         })
         .catch(error => {
-            llmOutput.textContent = `Erreur: ${error.message}`;
             const validationDiv = document.createElement('div');
             validationDiv.className = 'validation-message failure';
-            validationDiv.textContent = `Erreur de communication avec le serveur.`;
-            validationContainer.appendChild(validationDiv);
+
+            if (error.data && error.data.error === "Erreur de l'API OpenAI") {
+                // Specific OpenAI API error
+                validationDiv.textContent = error.data.error;
+                llmOutput.textContent = `Détails de l'erreur (Code: ${error.status}):\n${error.data.details}`;
+            } else {
+                // Generic network or server error
+                validationDiv.textContent = 'Erreur de communication avec le serveur.';
+                llmOutput.textContent = `Détails techniques: ${error.message || JSON.stringify(error)}`;
+            }
+             validationContainer.appendChild(validationDiv);
         });
     }
 
