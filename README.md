@@ -1,6 +1,7 @@
 # ZeroHeroLLM: OWASP Top 10 for LLM Security Labs
 
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/e0ec25c0-0c34-4a55-b04d-649304dbe0da"/>
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/8443733b-be99-4b91-b5c9-b6015470fcae" />
+
 
 
 
