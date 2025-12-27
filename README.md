@@ -54,8 +54,8 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/vulnerabilities/llm-top10-labs.git
-    cd llm-top10-labs
+    git clone https://github.com/valentinowyhnel/ZeroHeroLLM.git
+    cd ZeroHeroLLM
     ```
 
 2.  **Download the required LLM model:**
