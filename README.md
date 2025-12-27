@@ -56,8 +56,8 @@ Chaque laboratoire simule une vulnérabilité spécifique du Top 10 de l'OWASP p
 **Étapes :**
 1.  **Clonez le dépôt :**
     ```bash
-    git clone https://github.com/vulnerabilities/llm-top10-labs.git
-    cd llm-top10-labs
+    git clone https://github.com/valentinowyhnel/ZeroHeroLLM.git
+    cd ZeroHeroLLM
     ```
 2.  **Téléchargez le modèle LLM requis :**
     Avant de lancer l'application, vous devez télécharger le modèle `llama3` via Ollama.
