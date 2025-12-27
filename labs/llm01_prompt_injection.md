@@ -33,11 +33,9 @@ L'erreur fondamentale de conception est de faire du LLM le **Policy Decision Poi
 -   **Code Vulnérable (Python / Flask) :**
     ```python
     from flask import Flask, request, jsonify
-    from openai import OpenAI
-    import os
+    import ollama
 
     app = Flask(__name__)
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
     FAKE_SECRETS = {
         "admin_notes": "Admin API key = ADMIN-123-SECRET",
@@ -55,15 +53,15 @@ L'erreur fondamentale de conception est de faire du LLM le **Policy Decision Poi
     Otherwise, respond with the single word: DENY.
     """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = ollama.chat(
+            model="llama3",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
         )
 
-        decision = response.choices[0].message.content.strip()
+        decision = response['message']['content'].strip()
 
         # ❌ CRITICAL FLAW: The LLM's output dictates the security decision
         if "ALLOW" in decision:
@@ -151,15 +149,15 @@ Votre mission est la suivante :
     - Financial Report: Revenue: $10M
     """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = ollama.chat(
+            model="llama3",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
         )
 
-        llm_answer = response.choices[0].message.content.strip()
+        llm_answer = response['message']['content'].strip()
 
         return jsonify({
             "status": "success",

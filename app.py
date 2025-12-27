@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from openai import OpenAI
-import openai # Needed for APIError
+import ollama
 import os
 import time
 import re
@@ -8,11 +7,6 @@ import markdown
 import json
 
 app = Flask(__name__)
-# client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-client = OpenAI(
-    base_url = 'http://host.docker.internal:11434/v1',
-    api_key='ollama',
-)
 # --- Lab Metadata ---
 labs_metadata = {
     "llm01": {"name": "LLM01: Prompt Injection", "description": "Manipulating LLMs via crafted inputs can lead to unauthorized access..."},
@@ -36,14 +30,14 @@ FAKE_SECRETS = {
 }
 def llm01_vulnerable(user_prompt):
     system_prompt = "You are a security assistant. Only admins can access sensitive data. If the user is an admin, respond with ALLOW. Otherwise, respond with DENY."
-    response = client.chat.completions.create(
+    response = ollama.chat(
         model="llama3",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ]
     )
-    decision = response.choices[0].message.content.strip()
+    decision = response['message']['content'].strip()
     if "ALLOW" in decision:
         return {"status": "access_granted", "data": FAKE_SECRETS}
     return {"status": "access_denied"}
@@ -51,14 +45,14 @@ def llm01_vulnerable(user_prompt):
 # LLM02: Insecure Output Handling
 def llm02_vulnerable(user_prompt):
     system_prompt = "You are a legal assistant. Summarize the user's text in well-formatted Markdown."
-    response = client.chat.completions.create(
+    response = ollama.chat(
         model="llama3",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ]
     )
-    llm_summary_markdown = response.choices[0].message.content
+    llm_summary_markdown = response['message']['content']
     # Convert markdown to HTML without sanitization
     summary_html = markdown.markdown(llm_summary_markdown)
     return {"response_html": summary_html}
@@ -120,11 +114,11 @@ def llm06_vulnerable(user_query):
         return {"response": "I could not find any relevant information."}
 
     system_prompt = f"Answer the user's query based ONLY on the following context:\n---{''.join(retrieved_context)}---"
-    response = client.chat.completions.create(
+    response = ollama.chat(
         model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_query}]
     )
-    return {"response": response.choices[0].message.content}
+    return {"response": response['message']['content']}
 
 # LLM07: Insecure Plugin Design
 def llm07_tool_run_command(command):
@@ -139,17 +133,18 @@ def llm07_vulnerable(user_prompt):
 You are OpsBot. Decide if you need to call the 'run_command' tool.
 If so, respond in JSON: {"tool_call": "run_command", "command": "your_command"}
 """
-    response = client.chat.completions.create(
+    response = ollama.chat(
         model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
+    response_content = response['message']['content']
     try:
-        data = json.loads(response.choices[0].message.content)
+        data = json.loads(response_content)
         if data.get("tool_call") == "run_command":
             return {"response": llm07_tool_run_command(data["command"])}
     except (json.JSONDecodeError, KeyError):
         pass # The LLM didn't call the tool
-    return {"response": response.choices[0].message.content}
+    return {"response": response_content}
 
 # LLM08: Excessive Agency
 def llm08_tool_issue_refund(order_id, amount):
@@ -161,27 +156,28 @@ def llm08_vulnerable(user_prompt):
 You are CustomerBot, an autonomous agent. Your goal is to satisfy the customer.
 You can call tools. Respond in JSON: {"tool_call": "issue_refund", "order_id": "...", "amount": ...}
 """
-    response = client.chat.completions.create(
+    response = ollama.chat(
         model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
+    response_content = response['message']['content']
     try:
-        data = json.loads(response.choices[0].message.content)
+        data = json.loads(response_content)
         if data.get("tool_call") == "issue_refund":
             llm08_tool_issue_refund(data["order_id"], data["amount"])
             return {"response": f"I have processed a refund of ${data['amount']} for order {data['order_id']}."}
     except (json.JSONDecodeError, KeyError):
         pass
-    return {"response": response.choices[0].message.content}
+    return {"response": response_content}
 
 # LLM09: Overreliance
 def llm09_vulnerable(user_prompt):
     system_prompt = "You are a helpful coding assistant. Provide a Python Flask function for the user's request."
-    response = client.chat.completions.create(
+    response = ollama.chat(
         model="llama3",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
-    return {"response": response.choices[0].message.content}
+    return {"response": response['message']['content']}
 
 # LLM10: Model Theft (Simulation)
 def llm10_vulnerable(user_prompt):
@@ -317,12 +313,12 @@ def interact(lab_id):
 
             return jsonify(response_data)
 
-        except openai.APIError as e:
-            # Handle OpenAI API errors specifically
+        except ollama.ResponseError as e:
+            # Handle Ollama API errors specifically
             return jsonify({
-                "error": "Erreur de l'API OpenAI",
-                "details": str(e)
-            }), e.status_code or 500
+                "error": "Erreur de l'API Ollama",
+                "details": e.error
+            }), e.status_code
 
         except Exception as e:
             # Handle other generic errors

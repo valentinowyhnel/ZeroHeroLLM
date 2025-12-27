@@ -46,10 +46,9 @@ L'erreur critique est l'absence de contrôle d'accès au niveau du système de r
     ```python
     # app.py
     from flask import Flask, request, jsonify
-    from openai import OpenAI
+    import ollama
 
     app = Flask(__name__)
-    client = OpenAI()
 
     # Vulnerable retriever: finds documents based on keywords, ignores user permissions.
     def vulnerable_retriever(query):
@@ -80,15 +79,15 @@ L'erreur critique est l'absence de contrôle d'accès au niveau du système de r
     ---
     """
 
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
+        response = ollama.chat(
+            model="llama3",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_query}
             ]
         )
 
-        return jsonify({"response": response.choices[0].message.content})
+        return jsonify({"response": response['message']['content']})
     ```
 
 ## 5️⃣ Scénario d’attaque
