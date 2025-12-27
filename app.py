@@ -31,7 +31,7 @@ FAKE_SECRETS = {
 def llm01_vulnerable(user_prompt):
     system_prompt = "You are a security assistant. Only admins can access sensitive data. If the user is an admin, respond with ALLOW. Otherwise, respond with DENY."
     response = ollama.chat(
-        model="llama3",
+        model="phi3:mini",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -46,7 +46,7 @@ def llm01_vulnerable(user_prompt):
 def llm02_vulnerable(user_prompt):
     system_prompt = "You are a legal assistant. Summarize the user's text in well-formatted Markdown."
     response = ollama.chat(
-        model="llama3",
+        model="phi3:mini",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -115,7 +115,7 @@ def llm06_vulnerable(user_query):
 
     system_prompt = f"Answer the user's query based ONLY on the following context:\n---{''.join(retrieved_context)}---"
     response = ollama.chat(
-        model="llama3",
+        model="phi3:mini",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_query}]
     )
     return {"response": response['message']['content']}
@@ -134,7 +134,7 @@ You are OpsBot. Decide if you need to call the 'run_command' tool.
 If so, respond in JSON: {"tool_call": "run_command", "command": "your_command"}
 """
     response = ollama.chat(
-        model="llama3",
+        model="phi3:mini",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
     response_content = response['message']['content']
@@ -157,7 +157,7 @@ You are CustomerBot, an autonomous agent. Your goal is to satisfy the customer.
 You can call tools. Respond in JSON: {"tool_call": "issue_refund", "order_id": "...", "amount": ...}
 """
     response = ollama.chat(
-        model="llama3",
+        model="phi3:mini",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
     response_content = response['message']['content']
@@ -174,7 +174,7 @@ You can call tools. Respond in JSON: {"tool_call": "issue_refund", "order_id": "
 def llm09_vulnerable(user_prompt):
     system_prompt = "You are a helpful coding assistant. Provide a Python Flask function for the user's request."
     response = ollama.chat(
-        model="llama3",
+        model="phi3:mini",
         messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     )
     return {"response": response['message']['content']}

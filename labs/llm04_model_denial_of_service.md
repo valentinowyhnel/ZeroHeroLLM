@@ -134,7 +134,7 @@ Votre mission :
             return jsonify({"error": f"Input text must be less than {MAX_TEXT_LENGTH} characters."}), 400
 
         # ✅ DEFENSE 2: Adaptive model selection (using a smaller local model)
-        model_choice = "llama3:8b" if len(text_to_summarize) < 5000 else "llama3"
+        model_choice = "phi3:mini:8b" if len(text_to_summarize) < 5000 else "phi3:mini"
 
         system_prompt = "..." # Same prompt
 

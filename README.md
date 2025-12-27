@@ -1,6 +1,4 @@
 # ZeroHeroLLM: OWASP Top 10 for LLM Security Labs
-<img width="1024" height="1024" alt="Gemini_Generated_Image_eypuy7eypuy7eypu" src="https://github.com/user-attachments/assets/3ed3f2f9-cd2e-4781-b65b-8da641590c3f" />
-
 
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-2.2.2-000000?style=for-the-badge&logo=flask)
@@ -58,9 +56,9 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
     ```
 
 2.  **Download the required LLM model:**
-    This project uses `llama3` by default. Pull it via Ollama:
+    This project uses `phi3:mini` by default, which is a smaller model suitable for most machines. Pull it via Ollama:
     ```bash
-    ollama pull llama3
+    ollama pull phi3:mini
     ```
     *(Ensure the Ollama application is running in the background).*
 

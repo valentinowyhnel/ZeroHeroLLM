@@ -48,7 +48,7 @@ L'erreur de conception est de supposer que le LLM ne générera que du Markdown 
     """
 
         response = ollama.chat(
-            model="llama3",
+            model="phi3:mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": case_details}

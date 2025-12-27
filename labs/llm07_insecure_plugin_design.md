@@ -82,7 +82,7 @@ L'erreur de conception est double : le plugin `run_command` est beaucoup trop pe
     Available Tools:
     - run_command(command: str): Executes a shell command on the server.
     """
-        response = ollama.chat(model="llama3", messages=[...]) # Call to LLM
+        response = ollama.chat(model="phi3:mini", messages=[...]) # Call to LLM
         llm_output = response['message']['content']
 
         if "TOOL_CALL:" in llm_output:

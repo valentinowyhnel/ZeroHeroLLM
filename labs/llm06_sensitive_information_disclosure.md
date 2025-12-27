@@ -80,7 +80,7 @@ L'erreur critique est l'absence de contrôle d'accès au niveau du système de r
     """
 
         response = ollama.chat(
-            model="llama3",
+            model="phi3:mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_query}

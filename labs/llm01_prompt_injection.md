@@ -54,7 +54,7 @@ L'erreur fondamentale de conception est de faire du LLM le **Policy Decision Poi
     """
 
         response = ollama.chat(
-            model="llama3",
+            model="phi3:mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
@@ -150,7 +150,7 @@ Votre mission est la suivante :
     """
 
         response = ollama.chat(
-            model="llama3",
+            model="phi3:mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
