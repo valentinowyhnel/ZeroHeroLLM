@@ -1,5 +1,8 @@
 # ZeroHeroLLM: OWASP Top 10 for LLM Security Labs
 
+<img width="1024" height="559" alt="image" src="https://github.com/user-attachments/assets/b6f9f58a-1c54-4b00-abe6-db8c3c989c1e" />
+
+
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-2.2.2-000000?style=for-the-badge&logo=flask)
 ![Ollama](https://img.shields.io/badge/Ollama-local--llm-lightgrey?style=for-the-badge&logo=ollama)
