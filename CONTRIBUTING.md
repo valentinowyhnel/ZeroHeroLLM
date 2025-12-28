@@ -44,14 +44,14 @@ Here is a list of known areas that need improvement. This is a great place to st
 
 ### 4. Improve the LLM Interaction
 
--   **Hardcoded Model Name:** The model name (`"llama3"`) is hardcoded in `app.py`.
+-   **Hardcoded Model Name:** The model name (`"phi3:mini"`) is hardcoded in `app.py`.
     -   **Suggestion:** Make the model name configurable, for example, via an environment variable (`OLLAMA_MODEL`). This would allow users to easily experiment with other models like `mistral` or `codellama`.
 -   **Streaming Responses:** The UI currently waits for the full LLM response before displaying it.
     -   **Suggestion:** Modify the backend and frontend to stream the LLM response token by token. This would make the application feel much more responsive, especially for longer generations.
 
 ### 5. Documentation and Content
 
--   **Add a `LICENSE` file:** The project mentions an MIT license in the `README.md` but the file itself is missing.
+-   **Add a `LICENSE` file:** The project needs a `LICENSE` file.
 -   **Expand Explanations:** While the labs are functional, the explanations could always be improved with more diagrams, examples, or links to external resources.
 
 Thank you again for your interest in contributing!

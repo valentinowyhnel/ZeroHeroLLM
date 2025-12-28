@@ -1,8 +1,5 @@
 # ZeroHeroLLM: OWASP Top 10 for LLM Security Labs
 
-<img width="1024" height="1024" alt="Gemini_Generated_Image_eypuy7eypuy7eypu" src="https://github.com/user-attachments/assets/6c45c8f0-461a-4c03-be41-449ce3b3b949" />
-
-
 ![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)
 ![Flask](https://img.shields.io/badge/Flask-2.2.2-000000?style=for-the-badge&logo=flask)
 ![Ollama](https://img.shields.io/badge/Ollama-local--llm-lightgrey?style=for-the-badge&logo=ollama)
@@ -54,8 +51,8 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/valentinowyhnel/ZeroHeroLLM.git
-    cd ZeroHeroLLM
+    git clone https://github.com/vulnerabilities/llm-top10-labs.git
+    cd llm-top10-labs
     ```
 
 2.  **Download the required LLM model:**
@@ -84,10 +81,30 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
 6.  **Open the lab:**
     Navigate to `http://127.0.0.1:5000` in your web browser.
 
+
+## 🐳 Docker & Ollama Configuration
+
+The Flask application is designed to communicate with an Ollama server. When running the app inside a Docker container while Ollama is running on your host machine, you need to tell the app how to connect to Ollama.
+
+This is configured using the `OLLAMA_HOST` environment variable.
+
+#### Case 1: Running Both Locally (Default)
+If you are running the Flask app directly on your machine (e.g., via `flask run`) and Ollama is also running locally, you don't need to do anything. The app will automatically connect to `http://127.0.0.1:11434`.
+
+#### Case 2: Running App in Docker, Ollama on Host
+This is the most common scenario for containerized development.
+
+-   **Linux:** Use `host.docker.internal` as the hostname.
+    ```bash
+    docker run -p 5000:5000 -e OLLAMA_HOST=http://host.docker.internal:11434 your-image-name
+    ```
+-   **macOS & Windows:** Docker Desktop automatically maps `host.docker.internal` to your host's IP address.
+    ```bash
+    docker run -p 5000:5000 -e OLLAMA_HOST=http://host.docker.internal:11434 your-image-name
+    ```
+    *Note: On older Docker versions or specific Linux setups, you might need to find your host's IP on the Docker bridge network (`docker network inspect bridge`) and use that IP address directly.*
+
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines and ideas on how you can help improve the project.
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).

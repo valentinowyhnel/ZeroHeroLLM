@@ -3,60 +3,6 @@
 {% block title %}{{ lab_info.name }}{% endblock %}
 
 {% block content %}
-<style>
-    .tabs {
-        display: flex;
-        border-bottom: 2px solid #dee2e6;
-        margin-bottom: 1rem;
-    }
-    .tab-link {
-        padding: 0.75rem 1.25rem;
-        border: none;
-        background-color: transparent;
-        cursor: pointer;
-        font-size: 1rem;
-        margin-right: 5px;
-        border-bottom: 2px solid transparent;
-        transition: all 0.2s ease-in-out;
-    }
-    .tab-link.active {
-        color: #007bff;
-        border-bottom-color: #007bff;
-    }
-    .tab-content {
-        display: none;
-    }
-    .tab-content.active {
-        display: block;
-    }
-    .lab-container {
-        display: flex;
-        flex-direction: column; /* Stack elements vertically */
-        gap: 2rem;
-    }
-    .lab-docs {
-        width: 100%; /* Take full width */
-    }
-    .lab-interaction-container {
-        flex: 1;
-        padding: 1.5rem;
-        border: 1px solid #dee2e6;
-        border-radius: 5px;
-        background-color: #f8f9fa;
-    }
-    #user-input {
-        width: 100%;
-        min-height: 150px;
-        margin-bottom: 1rem;
-    }
-    #llm-output {
-        white-space: pre-wrap;
-        background-color: #e9ecef;
-        padding: 1rem;
-        border-radius: 5px;
-        min-height: 100px;
-    }
-</style>
 
 <h2>{{ lab_info.name }}</h2>
 <p>{{ lab_info.description }}</p>
@@ -167,13 +113,13 @@
             const validationDiv = document.createElement('div');
             validationDiv.className = 'validation-message failure';
 
-            if (error.data && error.data.error === "Erreur de l'API OpenAI") {
-                // Specific OpenAI API error
-                validationDiv.textContent = error.data.error;
-                llmOutput.textContent = `Détails de l'erreur (Code: ${error.status}):\n${error.data.details}`;
+            if (error.data && error.data.error) {
+                // Display the detailed error from the backend
+                validationDiv.textContent = "Erreur de communication avec le serveur.";
+                llmOutput.textContent = `Détails de l'erreur (Code: ${error.status}):\n${error.data.error}`;
             } else {
-                // Generic network or server error
-                validationDiv.textContent = 'Erreur de communication avec le serveur.';
+                // Generic network or unexpected error
+                validationDiv.textContent = 'Erreur réseau ou inattendue.';
                 llmOutput.textContent = `Détails techniques: ${error.message || JSON.stringify(error)}`;
             }
              validationContainer.appendChild(validationDiv);

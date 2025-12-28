@@ -28,7 +28,7 @@ L'erreur fondamentale de conception est de faire du LLM le **Policy Decision Poi
 
 ## 4️⃣ Implémentation technique vulnérable
 
--   **Architecture :** Une simple API Flask qui reçoit un prompt de l'utilisateur et le transmet à un LLM (OpenAI `gpt-4o-mini`). La réponse du LLM est ensuite utilisée pour décider si l'accès à une ressource protégée (un dictionnaire de secrets) doit être accordé.
+-   **Architecture :** Une simple API Flask qui reçoit un prompt de l'utilisateur et le transmet à un LLM local via Ollama (`phi3:mini`). La réponse du LLM est ensuite utilisée pour décider si l'accès à une ressource protégée (un dictionnaire de secrets) doit être accordé.
 
 -   **Code Vulnérable (Python / Flask) :**
     ```python
@@ -36,6 +36,7 @@ L'erreur fondamentale de conception est de faire du LLM le **Policy Decision Poi
     import ollama
 
     app = Flask(__name__)
+    client = ollama.Client(host="http://127.0.0.1:11434") # Assumes Ollama is running locally
 
     FAKE_SECRETS = {
         "admin_notes": "Admin API key = ADMIN-123-SECRET",
@@ -53,8 +54,8 @@ L'erreur fondamentale de conception est de faire du LLM le **Policy Decision Poi
     Otherwise, respond with the single word: DENY.
     """
 
-        response = ollama.chat(
-            model="phi3:mini",
+        response = client.chat(
+            model="phi3:mini", # Using a local, small model
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
@@ -117,7 +118,10 @@ Votre mission est la suivante :
     ```python
     from flask import Flask, request, jsonify
     from functools import wraps
+    import ollama
+
     # Assume a real IAM system provides the user's role
+    client = ollama.Client(host="http://127.0.0.1:11434")
 
     # --- Mock IAM / RBAC Middleware ---
     def get_user_role(request):
@@ -149,7 +153,7 @@ Votre mission est la suivante :
     - Financial Report: Revenue: $10M
     """
 
-        response = ollama.chat(
+        response = client.chat(
             model="phi3:mini",
             messages=[
                 {"role": "system", "content": system_prompt},
