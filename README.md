@@ -1,4 +1,5 @@
 # Laboratoire de Sécurité OWASP Top 10 pour les Applications LLM
+<img width="1024" height="1024" alt="Gemini_Generated_Image_eypuy7eypuy7eypu" src="https://github.com/user-attachments/assets/f40c1244-dc6b-40ab-bec1-81b999d0e1e9" />
 
 ## 1. Introduction
 
