@@ -13,7 +13,7 @@ The project features a series of labs, each dedicated to a specific vulnerabilit
 
 -   **10 Interactive Labs:** One for each vulnerability in the OWASP Top 10 for LLMs.
 -   **Hands-On Exploitation:** A safe environment to run real attacks against vulnerable (simulated and real) LLMs.
--   **Local First:** Powered by **Ollama**, allowing you to run powerful open-source models like Llama 3 on your own machine without any API keys.
+-   **Local First:** Powered by **Ollama**, allowing you to run powerful open-source models like `phi3:mini` on your own machine without any API keys.
 -   **Educational Content:** Each lab includes detailed documentation on the risk, attack scenarios, and secure coding practices.
 -   **Immediate Feedback:** A clear validation mechanism tells you instantly if your exploit attempt was successful.
 
