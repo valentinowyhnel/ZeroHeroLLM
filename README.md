@@ -22,7 +22,7 @@ The project features a series of labs, each dedicated to a specific vulnerabilit
 -   **Backend:** [Flask](https://flask.palletsprojects.com/) (Python)
 -   **LLM Backend:** [Ollama](https://ollama.com/)
 -   **Frontend:** HTML, CSS, JavaScript (with Jinja2 templating)
--   **Dependencies:** `ollama` Python library
+-   **Dependencies:** `ollama` Python library, `pytest` for testing.
 
 ## 🎯 The Labs
 
@@ -81,6 +81,22 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
 6.  **Open the lab:**
     Navigate to `http://127.0.0.1:5000` in your web browser.
 
+## 🧪 Running Tests
+
+This project includes a suite of unit tests to verify the success-check logic of each lab.
+
+1.  **Install testing dependencies:**
+    If you haven't already, install all dependencies, including `pytest`:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Run the tests:**
+    From the root of the project, simply run `pytest`:
+    ```bash
+    pytest
+    ```
+    All tests should pass, confirming that the lab validation logic is working correctly.
 
 ## 🐳 Docker & Ollama Configuration
 

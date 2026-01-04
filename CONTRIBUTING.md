@@ -15,9 +15,10 @@ If you find a bug or have an idea for an enhancement, please [open an issue](htt
 1.  **Fork the repository** on GitHub.
 2.  **Create a new branch** for your changes (`git checkout -b feature/your-awesome-feature`).
 3.  **Make your changes.** Please ensure your code follows the existing style of the project.
-4.  **Commit your changes** with a clear and descriptive commit message.
-5.  **Push your branch** to your fork (`git push origin feature/your-awesome-feature`).
-6.  **Open a pull request** from your fork to the main repository.
+4.  **Run the tests** to ensure you haven't introduced any regressions (`pytest`).
+5.  **Commit your changes** with a clear and descriptive commit message.
+6.  **Push your branch** to your fork (`git push origin feature/your-awesome-feature`).
+7.  **Open a pull request** from your fork to the main repository.
 
 ## Areas for Improvement (What to Work On)
 
@@ -28,13 +29,13 @@ Here is a list of known areas that need improvement. This is a great place to st
 -   **Modularize `app.py`:** The main `app.py` file currently contains the logic for all 10 labs. It would be much more maintainable to refactor this.
     -   **Suggestion:** Create a `labs/` directory in the backend and move the logic for each lab into its own Python file (e.g., `labs/llm01_prompt_injection.py`). The main `app.py` would then import and call these modular functions.
 
-### 2. Add a Testing Framework
+### 2. Improve the Testing Framework
 
--   **No Automated Tests:** The project currently lacks any form of automated testing (e.g., PyTest).
-    -   **Suggestion:** Introduce `pytest` and write a basic set of tests for the Flask application. Good starting points would be:
+-   **Basic Test Coverage:** The project now has a basic unit test suite (`test_labs.py`) that validates the `check_lab_success` function for each lab. This is a great start, but it could be expanded.
+    -   **Suggestion:** Add more tests to cover other parts of the application. Good starting points would be:
         -   A test that checks if the homepage (`/`) returns a `200 OK` status.
         -   Tests to ensure each lab page (`/lab/llmXX`) loads correctly.
-        -   Unit tests for the `check_lab_success` function to ensure the validation logic is correct for each lab.
+        -   "Unhappy path" tests for `check_lab_success` to ensure it correctly returns `False` for unsuccessful exploit attempts.
 
 ### 3. Enhance the User Interface
 
