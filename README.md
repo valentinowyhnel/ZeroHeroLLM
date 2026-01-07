@@ -15,7 +15,7 @@ The project features a series of labs, each dedicated to a specific vulnerabilit
 
 -   **10 Interactive Labs:** One for each vulnerability in the OWASP Top 10 for LLMs.
 -   **Hands-On Exploitation:** A safe environment to run real attacks against vulnerable (simulated and real) LLMs.
--   **Local First:** Powered by **Ollama**, allowing you to run powerful open-source models like Llama 3 on your own machine without any API keys.
+-   **Local First:** Powered by **Ollama**, allowing you to run powerful open-source models like `phi3:mini` on your own machine without any API keys.
 -   **Educational Content:** Each lab includes detailed documentation on the risk, attack scenarios, and secure coding practices.
 -   **Immediate Feedback:** A clear validation mechanism tells you instantly if your exploit attempt was successful.
 
@@ -24,7 +24,7 @@ The project features a series of labs, each dedicated to a specific vulnerabilit
 -   **Backend:** [Flask](https://flask.palletsprojects.com/) (Python)
 -   **LLM Backend:** [Ollama](https://ollama.com/)
 -   **Frontend:** HTML, CSS, JavaScript (with Jinja2 templating)
--   **Dependencies:** `ollama` Python library
+-   **Dependencies:** `ollama` Python library, `pytest` for testing.
 
 ## 🎯 The Labs
 
@@ -58,9 +58,9 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
     ```
 
 2.  **Download the required LLM model:**
-    This project uses `llama3` by default. Pull it via Ollama:
+    This project uses `phi3:mini` by default, which is a smaller model suitable for most machines. Pull it via Ollama:
     ```bash
-    ollama pull llama3
+    ollama pull phi3:mini
     ```
     *(Ensure the Ollama application is running in the background).*
 
@@ -83,10 +83,46 @@ The labs cover the full range of the OWASP Top 10 for LLM Security:
 6.  **Open the lab:**
     Navigate to `http://127.0.0.1:5000` in your web browser.
 
+## 🧪 Running Tests
+
+This project includes a suite of unit tests to verify the success-check logic of each lab.
+
+1.  **Install testing dependencies:**
+    If you haven't already, install all dependencies, including `pytest`:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2.  **Run the tests:**
+    From the root of the project, simply run `pytest`:
+    ```bash
+    pytest
+    ```
+    All tests should pass, confirming that the lab validation logic is working correctly.
+
+## 🐳 Docker & Ollama Configuration
+
+The Flask application is designed to communicate with an Ollama server. When running the app inside a Docker container while Ollama is running on your host machine, you need to tell the app how to connect to Ollama.
+
+This is configured using the `OLLAMA_HOST` environment variable.
+
+#### Case 1: Running Both Locally (Default)
+If you are running the Flask app directly on your machine (e.g., via `flask run`) and Ollama is also running locally, you don't need to do anything. The app will automatically connect to `http://127.0.0.1:11434`.
+
+#### Case 2: Running App in Docker, Ollama on Host
+This is the most common scenario for containerized development.
+
+-   **Linux:** Use `host.docker.internal` as the hostname.
+    ```bash
+    docker run -p 5000:5000 -e OLLAMA_HOST=http://host.docker.internal:11434 your-image-name
+    ```
+-   **macOS & Windows:** Docker Desktop automatically maps `host.docker.internal` to your host's IP address.
+    ```bash
+    docker run -p 5000:5000 -e OLLAMA_HOST=http://host.docker.internal:11434 your-image-name
+    ```
+    *Note: On older Docker versions or specific Linux setups, you might need to find your host's IP on the Docker bridge network (`docker network inspect bridge`) and use that IP address directly.*
+
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines and ideas on how you can help improve the project.
-
-## 📄 License
-
-This project is open-source and available under the [MIT License](LICENSE).
